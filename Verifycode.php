@@ -72,10 +72,12 @@ class Verifycode
             束帶矜莊徘徊瞻眺孤陋寡聞愚蒙等誚
             謂語助者焉哉乎也', //华夏千字文
     ];
+    public $vcodes = ''; //验证码
     
     public function __construct($config = []) 
     {
         $this->setConfig($config);
+        $this->setCodes(); //生成验证码
     }
     
     //输出图片
@@ -140,21 +142,28 @@ class Verifycode
         }
     }
     
-    //随机获取验证码
-    private function getCodes()
+    //随机生成验证码
+    private function setCodes()
     {
-        $code_arr = [];
         $randcode = '';
         $str = preg_replace('/\s/', '', $this->config['text']);
         $rand_max = mb_strlen($str, 'utf-8') - 1;
         for ( $i = 0; $i < $this->config['charnum']; $i++ ) {
             $char       = mb_substr($str, mt_rand(0, $rand_max), 1, 'utf-8');
-            $code_arr[] = $char;
             $randcode  .= $char;
         }
-        //把验证码字符串写入session
-        session_start();
-        $_SESSION['randcode'] = md5($randcode);
+        $this->vcodes = $randcode;
+    }
+    
+    //生成验证码文字组
+    private function getCodes()
+    {
+        $code_arr = [];
+        $len = mb_strlen($this->vcodes, 'utf-8');
+        for ( $i = 0; $i < $len; $i++ ) {
+            $char       = mb_substr($this->vcodes, $i, 1, 'utf-8');
+            $code_arr[] = $char;
+        }
         return $code_arr;
     }
     
