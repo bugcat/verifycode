@@ -140,6 +140,9 @@ class Verifycode
         if ( empty($config['font']) ) {
             $this->config['font'] = dirname(__FILE__).DIRECTORY_SEPARATOR.$this->config['font'];
         }
+        foreach ( $config as $ck => $cv ) {
+            $this->config[$ck] = $cv;
+        }
     }
     
     //随机生成验证码
